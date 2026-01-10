@@ -1,4 +1,5 @@
 import { Check, Crown, Sparkles, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -143,12 +144,23 @@ const GameTiers = () => {
                 ))}
               </ul>
 
-              <Button
-                variant={tier.featured ? "gold" : "outline"}
-                className="w-full"
-              >
-                {tier.cta}
-              </Button>
+              {tier.tier === "FREE" ? (
+                <Link to="/play/free" className="w-full">
+                  <Button
+                    variant={tier.featured ? "gold" : "outline"}
+                    className="w-full"
+                  >
+                    {tier.cta}
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant={tier.featured ? "gold" : "outline"}
+                  className="w-full"
+                >
+                  {tier.cta}
+                </Button>
+              )}
             </div>
           ))}
         </div>
