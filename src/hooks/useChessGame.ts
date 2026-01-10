@@ -46,6 +46,7 @@ export function useChessGame(options: UseChessGameOptions) {
   });
 
   const [gameStarted, setGameStarted] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false);
 
   const updateGameState = useCallback(() => {
     const game = gameRef.current;
@@ -66,9 +67,9 @@ export function useChessGame(options: UseChessGameOptions) {
     }));
   }, []);
 
-  // Timer logic
+  // Timer logic - only runs after first move
   useEffect(() => {
-    if (!gameStarted || gameState.isGameOver || gameState.turn !== 'w') {
+    if (!timerStarted || gameState.isGameOver || gameState.turn !== 'w') {
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
@@ -97,12 +98,12 @@ export function useChessGame(options: UseChessGameOptions) {
         clearInterval(timerRef.current);
       }
     };
-  }, [gameStarted, gameState.isGameOver, gameState.turn]);
+  }, [timerStarted, gameState.isGameOver, gameState.turn]);
 
-  // AI move logic
+  // AI move logic - only runs after player has made first move
   useEffect(() => {
     if (
-      !gameStarted ||
+      !timerStarted ||
       gameState.isGameOver ||
       gameState.turn !== 'b' ||
       gameState.aiThinking
@@ -133,7 +134,7 @@ export function useChessGame(options: UseChessGameOptions) {
     }, 500 + Math.random() * 500); // 500-1000ms delay
 
     return () => clearTimeout(timeout);
-  }, [gameStarted, gameState.turn, gameState.isGameOver, gameState.aiThinking, updateGameState]);
+  }, [timerStarted, gameState.turn, gameState.isGameOver, gameState.aiThinking, updateGameState]);
 
   const selectSquare = useCallback(
     (square: Square) => {
@@ -164,8 +165,16 @@ export function useChessGame(options: UseChessGameOptions) {
         });
 
         if (move) {
-          // Add time increment
-          const newTime = Math.min(gameState.playerTime + timeIncrement, maxTime);
+          // Start timer on first move
+          if (!timerStarted) {
+            setTimerStarted(true);
+          }
+          
+          // Add time increment (only after first move when timer is running)
+          const newTime = timerStarted 
+            ? Math.min(gameState.playerTime + timeIncrement, maxTime)
+            : gameState.playerTime;
+            
           setGameState((prev) => ({
             ...prev,
             selectedSquare: null,
@@ -184,7 +193,7 @@ export function useChessGame(options: UseChessGameOptions) {
         }));
       }
     },
-    [gameState, maxTime, timeIncrement, updateGameState]
+    [gameState, maxTime, timeIncrement, timerStarted, updateGameState]
   );
 
   const startGame = useCallback(() => {
@@ -209,6 +218,7 @@ export function useChessGame(options: UseChessGameOptions) {
 
   const resetGame = useCallback(() => {
     setGameStarted(false);
+    setTimerStarted(false);
     gameRef.current = new Chess();
     setGameState({
       fen: gameRef.current.fen(),
