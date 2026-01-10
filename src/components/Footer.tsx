@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   const links = [
     { name: "Play Now", href: "/play/free", isRoute: true },
-    { name: "Rules", href: "#rules", isRoute: false },
+    { name: "Rules", href: "/rules", isRoute: true },
     { name: "Contact", href: "#contact", isRoute: false },
     { name: "Terms of Service", href: "/terms", isRoute: true },
     { name: "Privacy Policy", href: "#privacy", isRoute: false },
