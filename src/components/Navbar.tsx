@@ -10,10 +10,8 @@ const Navbar = () => {
   const { user, loading, signOut } = useAuth();
 
   const navLinks = [
-    { name: "Play", href: "#play" },
-    { name: "How It Works", href: "#how-it-works" },
-    { name: "Winners", href: "#winners" },
-    { name: "Tiers", href: "#tiers" },
+    { name: "Play Now", href: "/play/free" },
+    { name: "Rules", href: "#rules" },
   ];
 
   const handleSignOut = async () => {

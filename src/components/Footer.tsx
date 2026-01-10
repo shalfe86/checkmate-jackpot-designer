@@ -1,130 +1,56 @@
-import { Crown, Mail, Twitter, MessageCircle, Github } from "lucide-react";
+import { Crown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
-  const links = {
-    product: [
-      { name: "Play Now", href: "#" },
-      { name: "Tournaments", href: "#" },
-      { name: "Leaderboard", href: "#" },
-      { name: "Prizes", href: "#" },
-    ],
-    company: [
-      { name: "About Us", href: "#" },
-      { name: "Careers", href: "#" },
-      { name: "Press", href: "#" },
-      { name: "Contact", href: "#" },
-    ],
-    legal: [
-      { name: "Terms of Service", href: "#" },
-      { name: "Privacy Policy", href: "#" },
-      { name: "Fair Play", href: "#" },
-      { name: "Responsible Gaming", href: "#" },
-    ],
-  };
-
-  const socials = [
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: MessageCircle, href: "#", label: "Discord" },
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Mail, href: "#", label: "Email" },
+  const links = [
+    { name: "Play Now", href: "/play/free", isRoute: true },
+    { name: "Rules", href: "#rules", isRoute: false },
+    { name: "Contact", href: "#contact", isRoute: false },
+    { name: "Terms of Service", href: "#terms", isRoute: false },
+    { name: "Privacy Policy", href: "#privacy", isRoute: false },
   ];
 
   return (
     <footer className="bg-card border-t border-border">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12">
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Brand */}
-          <div className="lg:col-span-2">
-            <a href="/" className="flex items-center gap-2 mb-4">
-              <Crown className="w-8 h-8 text-primary glow-gold" />
-              <span className="font-display text-xl font-bold text-gradient-gold">
-                Checkmate Jackpot
-              </span>
-            </a>
-            <p className="text-muted-foreground text-sm max-w-sm mb-6">
-              The world's premier skill-based chess gaming platform. 
-              Play responsibly and win big.
-            </p>
-            <div className="flex items-center gap-4">
-              {socials.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary/80 transition-colors"
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
-            </div>
-          </div>
+          <Link to="/" className="flex items-center gap-2">
+            <Crown className="w-6 h-6 text-primary" />
+            <span className="font-display text-lg font-bold text-gradient-gold">
+              Checkmate Jackpot
+            </span>
+          </Link>
 
           {/* Links */}
-          <div>
-            <h4 className="font-display font-bold mb-4 text-foreground">Product</h4>
-            <ul className="space-y-3">
-              {links.product.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-display font-bold mb-4 text-foreground">Company</h4>
-            <ul className="space-y-3">
-              {links.company.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-display font-bold mb-4 text-foreground">Legal</h4>
-            <ul className="space-y-3">
-              {links.legal.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <nav className="flex flex-wrap items-center justify-center gap-6">
+            {links.map((link) =>
+              link.isRoute ? (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                >
+                  {link.name}
+                </a>
+              )
+            )}
+          </nav>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Copyright */}
+        <div className="mt-8 pt-6 border-t border-border text-center">
           <p className="text-muted-foreground text-sm">
             © {new Date().getFullYear()} Checkmate Jackpot. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            <span className="text-xs text-muted-foreground">
-              Licensed & Regulated
-            </span>
-            <span className="text-xs text-muted-foreground">
-              18+ Only
-            </span>
-            <span className="text-xs text-muted-foreground">
-              Play Responsibly
-            </span>
-          </div>
         </div>
       </div>
     </footer>
