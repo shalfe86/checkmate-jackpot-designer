@@ -102,10 +102,13 @@ export function useChessGame(options: UseChessGameOptions) {
 
   // AI move logic - only runs after player has made first move
   useEffect(() => {
+    const game = gameRef.current;
+    const isBlackTurn = game.turn() === 'b';
+    
     if (
       !timerStarted ||
       gameState.isGameOver ||
-      gameState.turn !== 'b' ||
+      !isBlackTurn ||
       gameState.aiThinking
     ) {
       return;
@@ -115,7 +118,6 @@ export function useChessGame(options: UseChessGameOptions) {
 
     // Add slight delay for natural feel
     const timeout = setTimeout(() => {
-      const game = gameRef.current;
       const bestMove = getBestMove(game, 2); // Look 2 moves ahead
 
       if (bestMove) {
@@ -134,7 +136,7 @@ export function useChessGame(options: UseChessGameOptions) {
     }, 500 + Math.random() * 500); // 500-1000ms delay
 
     return () => clearTimeout(timeout);
-  }, [timerStarted, gameState.turn, gameState.isGameOver, gameState.aiThinking, updateGameState]);
+  }, [timerStarted, gameState.fen, gameState.isGameOver, gameState.aiThinking, updateGameState]);
 
   const selectSquare = useCallback(
     (square: Square) => {
