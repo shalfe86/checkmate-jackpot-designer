@@ -104,17 +104,15 @@ export function useChessGame(options: UseChessGameOptions) {
   useEffect(() => {
     const game = gameRef.current;
     const isBlackTurn = game.turn() === 'b';
-    
-    if (
-      !timerStarted ||
-      gameState.isGameOver ||
-      !isBlackTurn ||
-      gameState.aiThinking
-    ) {
+
+    if (!timerStarted || gameState.isGameOver || !isBlackTurn || gameState.aiThinking) {
       return;
     }
 
-    setGameState((prev) => ({ ...prev, aiThinking: true }));
+    // IMPORTANT: do not include `gameState.aiThinking` in the dependency array.
+    // If we do, setting aiThinking=true would immediately re-run the effect and clear the timeout,
+    // causing the AI to get stuck thinking forever.
+    setGameState((prev) => (prev.aiThinking ? prev : { ...prev, aiThinking: true }));
 
     // Add slight delay for natural feel
     const timeout = setTimeout(() => {
@@ -129,14 +127,16 @@ export function useChessGame(options: UseChessGameOptions) {
             lastMove: { from: move.from as Square, to: move.to as Square },
           }));
           updateGameState();
+          return;
         }
-      } else {
-        setGameState((prev) => ({ ...prev, aiThinking: false }));
       }
+
+      // Fallback: stop thinking even if no move was made
+      setGameState((prev) => ({ ...prev, aiThinking: false }));
     }, 500 + Math.random() * 500); // 500-1000ms delay
 
     return () => clearTimeout(timeout);
-  }, [timerStarted, gameState.fen, gameState.isGameOver, gameState.aiThinking, updateGameState]);
+  }, [timerStarted, gameState.fen, gameState.isGameOver, updateGameState]);
 
   const selectSquare = useCallback(
     (square: Square) => {
@@ -200,6 +200,7 @@ export function useChessGame(options: UseChessGameOptions) {
 
   const startGame = useCallback(() => {
     gameRef.current = new Chess();
+    setTimerStarted(false);
     setGameState({
       fen: gameRef.current.fen(),
       turn: 'w',
