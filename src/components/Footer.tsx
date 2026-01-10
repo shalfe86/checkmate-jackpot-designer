@@ -6,7 +6,7 @@ const Footer = () => {
     { name: "Play Now", href: "/play/free", isRoute: true },
     { name: "Rules", href: "#rules", isRoute: false },
     { name: "Contact", href: "#contact", isRoute: false },
-    { name: "Terms of Service", href: "#terms", isRoute: false },
+    { name: "Terms of Service", href: "/terms", isRoute: true },
     { name: "Privacy Policy", href: "#privacy", isRoute: false },
   ];
 
