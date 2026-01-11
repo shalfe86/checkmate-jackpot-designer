@@ -138,31 +138,26 @@ export function useChessGame(options: UseChessGameOptions) {
     return () => clearTimeout(timeout);
   }, [timerStarted, gameState.fen, gameState.isGameOver, updateGameState]);
 
-  const selectSquare = useCallback(
-    (square: Square) => {
+  // Handle drag-and-drop moves
+  const makeMove = useCallback(
+    (sourceSquare: Square, targetSquare: Square): boolean => {
       if (gameState.isGameOver || gameState.turn !== 'w' || gameState.aiThinking) {
-        return;
+        return false;
       }
 
       const game = gameRef.current;
-      const piece = game.get(square);
-
-      // If clicking on own piece, select it
-      if (piece && piece.color === 'w') {
-        const moves = game.moves({ square, verbose: true });
-        setGameState((prev) => ({
-          ...prev,
-          selectedSquare: square,
-          legalMoves: moves.map((m) => m.to as Square),
-        }));
-        return;
+      
+      // Check if it's a valid piece to move
+      const piece = game.get(sourceSquare);
+      if (!piece || piece.color !== 'w') {
+        return false;
       }
 
-      // If a piece is selected and clicking on a legal move, make the move
-      if (gameState.selectedSquare && gameState.legalMoves.includes(square)) {
+      // Attempt the move
+      try {
         const move = game.move({
-          from: gameState.selectedSquare,
-          to: square,
+          from: sourceSquare,
+          to: targetSquare,
           promotion: 'q', // Auto-promote to queen
         });
 
@@ -185,17 +180,16 @@ export function useChessGame(options: UseChessGameOptions) {
             lastMove: { from: move.from as Square, to: move.to as Square },
           }));
           updateGameState();
+          return true;
         }
-      } else {
-        // Clear selection
-        setGameState((prev) => ({
-          ...prev,
-          selectedSquare: null,
-          legalMoves: [],
-        }));
+      } catch {
+        // Invalid move
+        return false;
       }
+
+      return false;
     },
-    [gameState, maxTime, timeIncrement, timerStarted, updateGameState]
+    [gameState.isGameOver, gameState.turn, gameState.aiThinking, gameState.playerTime, maxTime, timeIncrement, timerStarted, updateGameState]
   );
 
   const startGame = useCallback(() => {
@@ -243,7 +237,7 @@ export function useChessGame(options: UseChessGameOptions) {
   return {
     gameState,
     gameStarted,
-    selectSquare,
+    makeMove,
     startGame,
     resetGame,
   };
