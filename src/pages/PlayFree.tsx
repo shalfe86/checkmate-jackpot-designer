@@ -15,7 +15,7 @@ const GAME_CONFIG = {
 };
 
 const PlayFree = () => {
-  const { gameState, gameStarted, selectSquare, startGame, resetGame } = useChessGame(GAME_CONFIG);
+  const { gameState, gameStarted, makeMove, startGame, resetGame } = useChessGame(GAME_CONFIG);
 
   return (
     <>
@@ -94,10 +94,8 @@ const PlayFree = () => {
                   <div className="w-full max-w-[500px]">
                     <ChessBoard
                       fen={gameState.fen}
-                      selectedSquare={gameState.selectedSquare}
-                      legalMoves={gameState.legalMoves}
                       lastMove={gameState.lastMove}
-                      onSquareClick={selectSquare}
+                      onPieceDrop={makeMove}
                       isPlayerTurn={gameState.turn === 'w'}
                       disabled={gameState.isGameOver || gameState.aiThinking}
                     />
