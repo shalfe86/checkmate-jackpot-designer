@@ -10,6 +10,7 @@ import PlayFree from "./pages/PlayFree";
 import Auth from "./pages/Auth";
 import Terms from "./pages/Terms";
 import Rules from "./pages/Rules";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/rules" element={<Rules />} />
+              <Route path="/profile" element={<Profile />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
