@@ -28,29 +28,29 @@ export function ChessBoard({
     };
   }
 
+  const handlePieceDrop = (sourceSquare: string, targetSquare: string): boolean => {
+    return onPieceDrop(sourceSquare as ChessSquare, targetSquare as ChessSquare);
+  };
+
   return (
     <div className="w-full rounded-lg overflow-hidden border-4 border-gold/50 shadow-2xl">
       <Chessboard
-        options={{
-          id: 'chess-board',
-          position: fen,
-          onPieceDrop: ({ sourceSquare, targetSquare }) => 
-            onPieceDrop(sourceSquare as ChessSquare, targetSquare as ChessSquare),
-          boardOrientation: 'white',
-          allowDragging: isPlayerTurn && !disabled,
-          boardStyle: {
-            borderRadius: '0.5rem',
-          },
-          darkSquareStyle: {
-            backgroundColor: '#92400e', // amber-800
-          },
-          lightSquareStyle: {
-            backgroundColor: '#fef3c7', // amber-100
-          },
-          squareStyles: customSquareStyles,
-          animationDurationInMs: 200,
-          showNotation: true,
+        id="chess-board"
+        position={fen}
+        onPieceDrop={handlePieceDrop}
+        boardOrientation="white"
+        arePiecesDraggable={isPlayerTurn && !disabled}
+        customBoardStyle={{
+          borderRadius: '0.5rem',
         }}
+        customDarkSquareStyle={{
+          backgroundColor: '#92400e',
+        }}
+        customLightSquareStyle={{
+          backgroundColor: '#fef3c7',
+        }}
+        customSquareStyles={customSquareStyles}
+        animationDuration={200}
       />
     </div>
   );
